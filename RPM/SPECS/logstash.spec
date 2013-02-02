@@ -38,8 +38,8 @@ true
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__mkdir} -p %{buildroot}%{base_install_dir}/lib
-%{__install} -m 755 %{SOURCE0} %{buildroot}%{base_install_dir}/lib/
+%{__mkdir} -p %{buildroot}%{base_install_dir}
+%{__install} -m 755 %{SOURCE0} %{buildroot}%{base_install_dir}/logstash.jar
 
 # plugins & patterns
 %{__mkdir} -p %{buildroot}%{base_install_dir}/plugins

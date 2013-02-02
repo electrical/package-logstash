@@ -35,7 +35,7 @@ fi
 export JAVA_HOME=/usr
 
 # Directory where the logstash all in one jar lives
-LS_HOME=/opt/logstash/lib
+LS_HOME=/usr/share/logstash
 
 # Additional Java OPTS
 LS_JAVA_OPTS='-Xms256m -Xmx256m'
