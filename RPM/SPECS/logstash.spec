@@ -13,7 +13,7 @@ Summary:        Logstash is a tool for managing events and logs.
 Group:          System Environment/Daemons
 License:        Apache License, Version 2.0
 URL:            http://logstash.net
-Source0:        http://semicomplete.com/files/%{name}/%{name}-%{version}-monolithic.jar
+Source0:        https://logstash.objects.dreamhost.com/release/%{name}-%{version}-monolithic.jar
 Source1:        logstash.init
 Source2:        logstash.logrotate
 Source3:        logstash.sysconfig
