@@ -106,7 +106,6 @@ rm -rf $RPM_BUILD_ROOT
 * Sat Feb  1 2013 Richard Pijnenburg <richard@ispavailability.com> - 1.1.9-1
 - Update to latest stable release.
 - New init script
-- Change from jre to java
 
 * Fri May  4 2012 Maksim Horbul <max@gorbul.net> - 1.1.0-1
 - Initial package
