@@ -20,7 +20,7 @@ Source3:        logstash.sysconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       java >= 1.6
+Requires:       jre >= 1.6.0
 
 Requires(post): chkconfig initscripts
 Requires(pre):  chkconfig initscripts
@@ -92,9 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rc.d/init.d/logstash
 %{_sysconfdir}/logrotate.d/logstash
 
-%config(noreplace) %{_sysconfdir}/sysconfig/logstash
+%{base_install_dir}/logstash.jar
 
-%{base_install_dir}/lib/*
+%config(noreplace) %{_sysconfdir}/sysconfig/logstash
 
 %defattr(-,logstash,logstash,-)
 %{_localstatedir}/run/logstash
