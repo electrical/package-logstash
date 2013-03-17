@@ -7,7 +7,7 @@
 
 Name:           logstash
 Version:        1.1.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Logstash is a tool for managing events and logs.
 
 Group:          System Environment/Daemons
@@ -43,7 +43,7 @@ rm -rf $RPM_BUILD_ROOT
 
 # plugins & patterns
 %{__mkdir} -p %{buildroot}%{base_install_dir}/plugins
-%{__mkdir} -p %{buildroot}%{_sysconfdir}/patterns
+%{__mkdir} -p %{buildroot}%{_sysconfdir}/%{name}/patterns
 
 # logs
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
@@ -87,7 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %dir %{base_install_dir}
 %dir %{base_install_dir}/plugins
-%dir %{_sysconfdir}/patterns
+%dir %{_sysconfdir}/%{name}/patterns
 
 %{_sysconfdir}/rc.d/init.d/logstash
 %{_sysconfdir}/logrotate.d/logstash
@@ -101,8 +101,11 @@ rm -rf $RPM_BUILD_ROOT
 %{base_install_dir}/tmp
 %dir %{_localstatedir}/log/logstash
 
-
 %changelog
+* Sun Mar 17 2013 Richard Pijnenburg <richard@ispavailability.com> - 1.1.9-2
+- Update init script
+- Create patterns dir in correct place
+
 * Sat Feb  1 2013 Richard Pijnenburg <richard@ispavailability.com> - 1.1.9-1
 - Update to latest stable release.
 - New init script

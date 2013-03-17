@@ -1,8 +1,8 @@
 #! /bin/sh
 #
-#	/etc/rc.d/init.d/logstash
+#       /etc/rc.d/init.d/logstash
 #
-#	Starts Logstash as a daemon
+#       Starts Logstash as a daemon
 #
 # chkconfig: 2345 20 80
 # description: Starts Logstash as a daemon
@@ -38,7 +38,7 @@ export JAVA_HOME=/usr
 LS_HOME=/usr/share/logstash
 
 # Additional Java OPTS
-LS_JAVA_OPTS='-Xms256m -Xmx256m'
+LS_JAVA_OPTS="-Xmx256m -Djava.io.tmpdir=$LS_HOME/tmp"
 
 # logstash log directory
 LOG_DIR=/var/log/logstash
@@ -59,7 +59,7 @@ NICE=19
 FILTER_THREADS=1
 
 # Path to sincedb files
-SINCEDB_PATH=/var/lib/logstash
+SINCEDB_PATH=/etc/logstash/sincedb/
 
 # End of variables that can be overwritten in $DEFAULT
 
@@ -70,32 +70,51 @@ fi
 # Define other required variables
 PID_FILE=/var/run/$NAME.pid
 
-DAEMON=`which java`
-ARGS="${LS_JAVA_OPTS} -jar ${LS_HOME}/logstash.jar agent --config ${CONF_DIR} --log ${LOG_FILE} -w ${FILTER_THREADS}"
+JAVA=`which java`
+JAR="${LS_HOME}/logstash.jar"
+ARGS="${LS_JAVA_OPTS} -jar ${JAR} agent --config ${CONF_DIR} --log ${LOG_FILE} -w ${FILTER_THREADS}"
 
 export SINCEDB_PATH=$SINCEDB_PATH
 
-# Exit if the package is not installed
-if [ ! -x "$DAEMON" ]; then
-{
-  echo "Couldn't find $DAEMON"
-  exit 99
+is_true() {
+    if [ "x$1" = "xtrue" -o "x$1" = "xyes" -o "x$1" = "x1" ] ; then
+        return 0
+    else
+        return 1
+    fi
 }
-fi
-
 
 #
 # Function that starts the daemon/service
 #
 do_start()
 {
+
+  if ! is_true "$START" ; then
+    echo "logstash not configured to start, please edit $DEFAULT to enable"
+    exit 0
+  fi
+
+  if [ -z "$JAVA" ]; then
+    echo "no JDK found - $JAVA"
+    exit 1
+  fi
+
+  if ! test -e "${JAR}"; then
+    echo "Daemon $DAEMON doesn't exist"
+    exit 1
+  fi
+
   if pidofproc -p "$PID_FILE" >/dev/null; then
     failure
     exit 99
   fi
+
   ulimit -n $OPEN_FILES
+
   cd $LS_HOME
-  $DAEMON $ARGS > /dev/null 2>&1 &
+  $JAVA $ARGS > /dev/null 1>&1 &
+
   RETVAL=$?
   local PID=`pgrep -f "${DAEMON} ${ARGS}"`
   echo $PID > $PID_FILE
@@ -117,12 +136,12 @@ case "$1" in
   start)
     echo -n "Starting $DESC: "
     do_start
-    touch /var/lock/subsys/$NAME
+    touch /var/lock/subsys/logstash/$NAME
     ;;
   stop)
     echo -n "Stopping $DESC: "
     do_stop
-    rm /var/lock/subsys/$NAME
+    rm /var/lock/subsys/logstash/$NAME
     ;;
   restart|reload)
     echo -n "Restarting $DESC: "
